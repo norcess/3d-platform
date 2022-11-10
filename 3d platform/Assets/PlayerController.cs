@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    float maxSpeed = 5.0f;
+    float maxSpeed = 7.0f;
     float rotation = 0.0f;
     float camRotation = 0.0f;
     float rotationSpeed = 2.0f;
     float camRotationSpeed = 1.5f;
     GameObject cam;
     Rigidbody myRigidbody;
+
+    bool isOnGround;
+    public GameObject groundChecker;
+    public LayerMask groundLayer;
+    public float jumpForce = 300.0f;
 
     void Start()
     {
@@ -21,6 +26,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        isOnGround = Physics.CheckSphere(groundChecker.transform.position, 0.1f, groundLayer);
+
+        if (isOnGround == true && Input.GetKeyDown(KeyCode.Space))
+        {
+            myRigidbody.AddForce(transform.up * jumpForce);
+        }
+
        Vector3 newVelocity = transform.forward * Input.GetAxis("Vertical") * maxSpeed;
        myRigidbody.velocity = new Vector3(newVelocity.x, myRigidbody.velocity.y, newVelocity.z);
 
